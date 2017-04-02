@@ -12,6 +12,8 @@ import CircularSpinner
 
 class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var errorBannerView: UIView!
+    
     @IBOutlet weak var moviesTableView: UITableView!
     
     var movies: [NSDictionary] = []
@@ -62,17 +64,22 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let task : URLSessionDataTask = session.dataTask(
             with: request as URLRequest,
             completionHandler: { (data, response, error) in
-                if let data = data {
-                    if let responseDictionary = try! JSONSerialization.jsonObject(
-                        with: data, options:[]) as? NSDictionary {
-                        
-                        // This is how we get the 'response' results
-                        let resultsFieldDictionary = responseDictionary["results"] as! [NSDictionary]
-                        self.movies = resultsFieldDictionary
-                        self.moviesTableView.reloadData()
-                        CircularSpinner.hide()
+                if error != nil {
+                    self.errorBannerView.isHidden = false
+                } else {
+                    self.errorBannerView.isHidden = true
+                    if let data = data {
+                        if let responseDictionary = try! JSONSerialization.jsonObject(
+                            with: data, options:[]) as? NSDictionary {
+                            
+                            // This is how we get the 'response' results
+                            let resultsFieldDictionary = responseDictionary["results"] as! [NSDictionary]
+                            self.movies = resultsFieldDictionary
+                            self.moviesTableView.reloadData()
+                        }
                     }
                 }
+                CircularSpinner.hide()
         });
         task.resume()
     }
