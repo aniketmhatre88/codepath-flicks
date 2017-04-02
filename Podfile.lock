@@ -14,13 +14,16 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
+  - CircularSpinner (1.2.0)
 
 DEPENDENCIES:
   - AFNetworking
+  - CircularSpinner
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  CircularSpinner: 80b8ee3eda59b66d20631d4ca7c7c83720931739
 
-PODFILE CHECKSUM: bae111d0bb2c10c2107d97ee1b139e66d4568546
+PODFILE CHECKSUM: 4bf6a701be1b8e7d658b980b42d2131484f3e614
 
 COCOAPODS: 1.2.0

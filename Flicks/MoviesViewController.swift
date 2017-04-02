@@ -8,6 +8,7 @@
 
 import UIKit
 import AFNetworking
+import CircularSpinner
 
 class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -18,6 +19,7 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        CircularSpinner.show("Loading...", animated: true, type: .indeterminate)
         moviesTableView.delegate = self
         moviesTableView.dataSource = self
         fetchMovies()
@@ -68,6 +70,7 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         let resultsFieldDictionary = responseDictionary["results"] as! [NSDictionary]
                         self.movies = resultsFieldDictionary
                         self.moviesTableView.reloadData()
+                        CircularSpinner.hide()
                     }
                 }
         });
