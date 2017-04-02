@@ -21,10 +21,18 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        moviesTableView.insertSubview(refreshControl, at: 0)
+        
         CircularSpinner.show("Loading...", animated: true, type: .indeterminate)
         moviesTableView.delegate = self
         moviesTableView.dataSource = self
         fetchMovies()
+    }
+    
+    func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        fetchMovies(refreshControl)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,7 +60,7 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-    func fetchMovies() {
+    func fetchMovies(_ refreshControl: UIRefreshControl? = nil) {
         let url = URL(string:"https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")
         let request = URLRequest(url: url!)
         let session = URLSession(
@@ -79,7 +87,12 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         }
                     }
                 }
-                CircularSpinner.hide()
+                
+                if let refreshControl = refreshControl {
+                    refreshControl.endRefreshing()
+                } else {
+                    CircularSpinner.hide()
+                }
         });
         task.resume()
     }
