@@ -31,13 +31,14 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell", for: indexPath) as! MovieCell
         let movie = movies[indexPath.row]
         
-        let baseUrl = "https://image.tmdb.org/t/p/w342/"
-        let posterPath = movie["poster_path"] as! String
-        let imageUrl = NSURL(string: baseUrl + posterPath)
-        
         cell.titleLabel.text = movie["title"] as? String
         cell.overviewLabel.text = movie["overview"] as? String
-        cell.posterView.setImageWith(imageUrl as! URL)
+        
+        let baseUrl = "https://image.tmdb.org/t/p/w342/"
+        if let posterPath = movie["poster_path"] as? String {
+            let imageUrl = NSURL(string: baseUrl + posterPath)
+            cell.posterView.setImageWith(imageUrl as! URL)
+        }
         
         return cell
     }
@@ -74,14 +75,19 @@ class MoviesViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        
+        let cell = sender as! UITableViewCell
+        let indexPath = moviesTableView.indexPath(for: cell)
+        let movie = movies[(indexPath?.row)!]
+        
+        let detailViewController = segue.destination as! DetailViewController
+        
+        detailViewController.movie = movie
     }
-    */
-
 }
